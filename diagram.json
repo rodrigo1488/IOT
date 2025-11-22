@@ -1,0 +1,33 @@
+{
+  "version": 1,
+  "author": "Vitor Batista Souza",
+  "editor": "wokwi",
+  "parts": [
+    { "type": "board-esp32-devkit-c-v4", "id": "esp", "top": 96, "left": 273.64, "attrs": {} },
+    { "type": "wokwi-dht22", "id": "dht1", "top": -38.1, "left": 301.8, "attrs": {} },
+    { "type": "wokwi-potentiometer", "id": "pot1", "top": 94.7, "left": 172.6, "attrs": {} },
+    { "type": "wokwi-led", "id": "led1", "top": 6, "left": 387.8, "attrs": { "color": "red" } },
+    {
+      "type": "wokwi-buzzer",
+      "id": "bz1",
+      "top": 98.4,
+      "left": 433.8,
+      "attrs": { "volume": "0.1" }
+    }
+  ],
+  "connections": [
+    [ "esp:TX", "$serialMonitor:RX", "", [] ],
+    [ "esp:RX", "$serialMonitor:TX", "", [] ],
+    [ "esp:3V3", "dht1:VCC", "red", [ "h0" ] ],
+    [ "esp:GND.3", "dht1:GND", "black", [ "h0" ] ],
+    [ "dht1:SDA", "esp:21", "yellow", [ "v0" ] ],
+    [ "esp:34", "pot1:SIG", "green", [ "h0" ] ],
+    [ "esp:GND.1", "pot1:GND", "black", [ "h0" ] ],
+    [ "pot1:VCC", "esp:3V3", "red", [ "v0" ] ],
+    [ "led1:C", "esp:GND.2", "orange", [ "v0" ] ],
+    [ "led1:A", "esp:2", "orange", [ "v0" ] ],
+    [ "bz1:1", "esp:GND.3", "blue", [ "v0" ] ],
+    [ "bz1:2", "esp:26", "blue", [ "v0" ] ]
+  ],
+  "dependencies": {}
+}

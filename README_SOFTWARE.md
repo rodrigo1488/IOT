@@ -1,4 +1,4 @@
-## Documentação do Código (Vital Charger IoT)
+## Documentação do Código (Vital  IoT)
 
 ### 1. Visão geral
 O firmware roda em um ESP32 virtual no Wokwi e lê dois sensores:
@@ -19,7 +19,7 @@ e envia tudo para a internet via MQTT.
    broker público `test.mosquitto.org`.
 4. **`publishTelemetry()`** – monta um JSON com BPM, temperatura, umidade e
    motivo do alerta usando a biblioteca `ArduinoJson`, depois publica em dois
-   tópicos MQTT (`vitalcharger/telemetry` e `vitalcharger/alert`).
+   tópicos MQTT (`vital/telemetry` e `vital/alert`).
 5. **`loop()`** – roda sem parar; lê sensores, calcula BPM, decide se há alerta,
    comanda LED/buzzer e chama `publishTelemetry()` a cada 3 s.
 

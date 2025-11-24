@@ -1,6 +1,6 @@
 ## Interfaces, Protocolos e Comunicação
 
-Este documento explica, em linguagem simples, como o Vital Charger IoT conversa
+Este documento explica, em linguagem simples, como o Vital  IoT conversa
 com o mundo externo e como você pode acompanhar os dados.
 
 ### 1. Camada física: Wi-Fi
@@ -19,8 +19,8 @@ com o mundo externo e como você pode acompanhar os dados.
 #### Tópicos utilizados
 | Tópico | Conteúdo | Quando é enviado |
 | ------ | -------- | ---------------- |
-| `vitalcharger/telemetry` | JSON com BPM, temperatura, umidade e status de alerta | A cada 3 s |
-| `vitalcharger/alert` | Mesmo JSON da telemetria | Somente quando há alerta |
+| `vital/telemetry` | JSON com BPM, temperatura, umidade e status de alerta | A cada 3 s |
+| `vital/alert` | Mesmo JSON da telemetria | Somente quando há alerta |
 
 #### Estrutura da mensagem JSON
 ```json
@@ -47,8 +47,8 @@ com o mundo externo e como você pode acompanhar os dados.
 1. Baixe um cliente simples, como **MQTT Explorer** ou **MQTTX**.
 2. Configure o host como `test.mosquitto.org` e a porta 1883.
 3. Clique em conectar e assine os tópicos:
-   - `vitalcharger/telemetry`
-   - `vitalcharger/alert`
+   - `vital/telemetry`
+   - `vital/alert`
 4. Execute o projeto no Wokwi. As mensagens aparecerão em tempo real.
 
 ### 5. Como reutilizar a comunicação em outro projeto

@@ -1,7 +1,7 @@
 #include <WiFi.h>
 #include "DHT.h"
 
-// Simulação Vital Charger IoT
+// Simulação Vital  IoT
 #define DHTPIN 21
 #define DHTTYPE DHT22
 DHT dht(DHTPIN, DHTTYPE);
@@ -24,7 +24,7 @@ void setup() {
   pinMode(pinBuzzer, OUTPUT);
   dht.begin();
 
-  Serial.println("=== Vital Charger IoT (Modo Simulado) ===");
+  Serial.println("=== Vital  IoT (Modo Simulado) ===");
   Serial.println("Conectando Wi-Fi (simulado)...");
   delay(1000);
   Serial.println("Conectado! (simulação)");

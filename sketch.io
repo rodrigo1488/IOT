@@ -2,33 +2,31 @@
 #include <PubSubClient.h>
 #include "DHT.h"
 
-// ---------------------- SIMULAÇÃO -------------------------
+// Simulação Vital Charger IoT
 #define DHTPIN 21
 #define DHTTYPE DHT22
 DHT dht(DHTPIN, DHTTYPE);
 
 const int pinADC = 34;    // Potenciômetro (simula ECG)
-const int pinLED = 2;
-const int pinBuzzer = 26;
+const int pinLED = 2;     // LED de alerta
+const int pinBuzzer = 26; // Buzzer
 
+// Limiares simulados
 int BPM_LOW = 40;
 int BPM_HIGH = 120;
 float TEMP_HIGH = 37.5;
 
-unsigned long lastCheck = 0;
+unsigned long lastPrint = 0;
 int bpm = 0;
 
-bool alertaAnterior = false;   // evita enviar alerta repetido
-
-// ---------------------- WIFI + MQTT -------------------------
+// WIFI + MQTT -------------------------
 const char* ssid = "Wokwi-GUEST";
 const char* password = "";
-
 const char* mqtt_server = "broker.hivemq.com";
 
 WiFiClient espClient;
 PubSubClient client(espClient);
-// ------------------------------------------------------------
+// -------------------------------------
 
 void conectaWiFi() {
   WiFi.begin(ssid, password);
@@ -45,11 +43,10 @@ void conectaMQTT() {
 
 void setup() {
   Serial.begin(115200);
-
   pinMode(pinLED, OUTPUT);
   pinMode(pinBuzzer, OUTPUT);
-
   dht.begin();
+
   conectaWiFi();
 
   client.setServer(mqtt_server, 1883);
@@ -80,7 +77,6 @@ void loop() {
     tipo = "Temperatura alta";
   }
 
-  // Ações locais (LED/Buzzer)
   if (alerta) {
     digitalWrite(pinLED, HIGH);
     tone(pinBuzzer, 1000, 300);
@@ -89,32 +85,25 @@ void loop() {
     noTone(pinBuzzer);
   }
 
-  // Checagem a cada 2 segundos
-  if (millis() - lastCheck > 2000) {
-    lastCheck = millis();
+  if (millis() - lastPrint > 3000) {
+    lastPrint = millis();
 
-    // ------- ENVIA MQTT SOMENTE NA TRANSIÇÃO NORMAL → ALERTA -------
-    if (alerta && !alertaAnterior) {
+    // Criar JSON SIMPLES
+    String payload = "{";
+    payload += "\"bpm\":" + String(bpm) + ",";
+    payload += "\"temp\":" + String(temp) + ",";
+    payload += "\"umidade\":" + String(hum) + ",";
+    payload += "\"alerta\":" + String(alerta ? "true" : "false") + ",";
+    payload += "\"tipo\":\"" + tipo + "\"";
+    payload += "}";
 
-      String payload = "{";
-      payload += "\"bpm\":" + String(bpm) + ",";
-      payload += "\"temp\":" + String(temp) + ",";
-      payload += "\"umidade\":" + String(hum) + ",";
-      payload += "\"alerta\":true,";
-      payload += "\"tipo\":\"" + tipo + "\"";
-      payload += "}";
+    // Enviar para o broker
+    client.publish("vital/charger/rodrigo", payload.c_str());
 
-      client.publish("vital/charger/rodrigo", payload.c_str());
-
-      Serial.println("🚨 ALERTA ENVIADO VIA MQTT:");
-      Serial.println(payload);
-    }
-
-    // Debug local
-    Serial.printf("BPM: %d | Temp: %.1f°C | Hum: %.1f%% | ALERTA: %s\n",
-                  bpm, temp, hum, alerta ? "SIM" : "NÃO");
+    Serial.println("==========================");
+    Serial.println("MQTT ENVIADO ->");
+    Serial.println(payload);
   }
 
-  // Atualiza estado do alerta para evitar spam
-  alertaAnterior = alerta;
+  delay(100);
 }
